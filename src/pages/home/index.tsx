@@ -1,12 +1,12 @@
-import { Container } from "../../components/Container";
-import { CountDown } from "../../components/CountDown";
-import { MainForm } from "../../components/MainForm";
-import { MainTemplete } from "../../components/templates/MainTemplate";
+import { Container } from '../../components/Container';
+import { CountDown } from '../../components/CountDown';
+import { MainForm } from '../../components/MainForm';
+import { MainTemplete } from '../../components/templates/MainTemplate';
 
-export function Home(){ 
-    return(    
+export function Home() {
+  return (
     <MainTemplete>
-        <Container>
+      <Container>
         <CountDown />
       </Container>
 
@@ -14,6 +14,5 @@ export function Home(){
         <MainForm />
       </Container>
     </MainTemplete>
-    );
-
+  );
 }
