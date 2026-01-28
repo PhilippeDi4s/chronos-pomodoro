@@ -8,10 +8,12 @@ import type { TaskModel } from '../../Models/TaskModel';
 import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { getNextCycle } from '../../utils/getNextCycle';
 import { getNextCycleType } from '../../utils/getNextCycleType';
-import { formatSecondsToMinutes } from '../../utils/formatSecondsToMinutes';
+import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
+import { Tips } from '../Tips';
+import { showMessage } from '../../adapters/showMessage';
 
 export function MainForm() {
-  const { state, setState } = useTaskContext();
+  const { state, dispatch } = useTaskContext();
   const taskNameInput = useRef<HTMLInputElement>(null);
 
   const nextCicle = getNextCycle(state.currentCycle);
@@ -19,13 +21,14 @@ export function MainForm() {
 
   function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    showMessage.dismiss();
 
     if (taskNameInput.current === null) return;
 
     const taskName = taskNameInput.current.value.trim();
 
     if (!taskName) {
-      alert('Digite o nome da Tarefa');
+      showMessage.warn('Digite o nome da Tarefa');
       return;
     }
 
@@ -39,19 +42,14 @@ export function MainForm() {
       type: nextCicleType,
     };
 
-    const secondesRemainig = newTask.duration * 60;
+    showMessage.success('Tarefa ' + newTask.name + ' iniciada');
 
-    setState(prevState => {
-      return {
-        ...prevState,
-        config: { ...prevState.config },
-        activeTask: newTask,
-        currentCycle: nextCicle,
-        secondesRemainig,
-        formatedSecondsRemaining: formatSecondsToMinutes(secondesRemainig),
-        tasks: [...prevState.tasks, newTask],
-      };
-    });
+    dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
+  }
+
+  function handleInterruptTask() {
+    showMessage.error('Tarefa cancelada');
+    dispatch({ type: TaskActionTypes.INTERRUPT_TASK });
   }
 
   return (
@@ -60,15 +58,16 @@ export function MainForm() {
         <DefaultInput
           id='meuInput'
           type='texte'
-          labelText='teste'
-          required
+          labelText='Task'
+          // required
           placeholder='Digite sua tarefa'
           ref={taskNameInput}
+          disabled={!!state.activeTask}
         />
       </div>
 
       <div className='formRow'>
-        <p>Próximo intervalo é de XXmin</p>
+        <Tips />
       </div>
 
       {state.currentCycle > 0 && (
@@ -78,8 +77,24 @@ export function MainForm() {
       )}
 
       <div className='formRow'>
-        <DefaultButton icon={<PlayCircleIcon />} />
-        <DefaultButton icon={<StopCircleIcon />} />
+        {!state.activeTask && (
+          <DefaultButton
+            aria-label='Iniciar nova tarefa'
+            title='Iniciar nova tarefa'
+            type='submit'
+            icon={<PlayCircleIcon />}
+            key={'btn_submit'}
+          />
+        )}{' '}
+        {!!state.activeTask && (
+          <DefaultButton
+            onClick={handleInterruptTask}
+            color='red'
+            type='button'
+            icon={<StopCircleIcon />}
+            key={'btn_button'}
+          />
+        )}
       </div>
     </form>
   );

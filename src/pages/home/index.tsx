@@ -1,11 +1,11 @@
 import { Container } from '../../components/Container';
 import { CountDown } from '../../components/CountDown';
 import { MainForm } from '../../components/MainForm';
-import { MainTemplete } from '../../components/templates/MainTemplate';
+import { MainTemplate } from '../../components/templates/MainTemplate';
 
 export function Home() {
   return (
-    <MainTemplete>
+    <MainTemplate>
       <Container>
         <CountDown />
       </Container>
@@ -13,6 +13,6 @@ export function Home() {
       <Container>
         <MainForm />
       </Container>
-    </MainTemplete>
+    </MainTemplate>
   );
 }
