@@ -1,7 +1,7 @@
 import style from './style.module.css';
 
 type DefaultButtonProps = {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   color?: 'green' | 'red';
 } & React.ComponentProps<'button'>;
 

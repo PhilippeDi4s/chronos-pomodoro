@@ -1,0 +1,34 @@
+
+.toastConfirmContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+}
+
+.toastConfirmActions {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-end;
+}
+
+.toastBtn {
+  padding: 0.8rem 1.8rem;
+  border-radius: 5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.toastBtn:hover {
+  filter: brightness(85%);
+}
+
+.toastBtnConfirm {
+  background: var(--warning);
+}
+
+.toastBtnCancel {
+  background: var(--info);
+}
