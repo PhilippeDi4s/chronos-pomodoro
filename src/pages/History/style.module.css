@@ -17,6 +17,7 @@
     width: 100%;
     min-width: 64rem;
     border-collapse: collapse;
+    color: var(--gray-100);
   }
 
   th {

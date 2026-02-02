@@ -1,12 +1,56 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 
-.toastConfirmContainer {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
   display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  width: 100%;
+  justify-content: center;
+  z-index: 1;
 }
 
-.toastConfirmActions {
+.modal {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  background: radial-gradient(
+    ellipse at right top,
+    var(--error) 0%,
+    var(--gray-900) 45%,
+    var(--gray-800) 100%
+  );
+  opacity: 0.9;
+  transition: opacity 0.25s ease-in;
+  padding: 2rem;
+}
+
+.modal:hover {
+  opacity: 1;
+}
+
+.modal_header{
+  text-align: right;
+}
+
+.Xicon {
+  width: clamp(2.5rem, 5vw, 3.5rem);
+  height: clamp(2.5rem, 10vw, 3.5rem);
+  cursor: pointer;
+}
+
+.modal_question {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.modalConfirmActions {
   display: flex;
   gap: 2rem;
   justify-content: flex-end;
@@ -18,17 +62,21 @@
   border: none;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease-in-out;
+  color: var(--gray-100);
+  background: transparent;
+  border: 1px solid var(--gray-500);
 }
 
-.toastBtn:hover {
-  filter: brightness(85%);
+.toastBtnConfirm:hover {
+  background: var(--error);
 }
 
-.toastBtnConfirm {
-  background: var(--warning);
-}
-
-.toastBtnCancel {
+.toastBtnCancel:hover {
   background: var(--info);
+}
+@media (min-width: 88rem){
+  .modal{
+    width: 70%;
+  }
 }

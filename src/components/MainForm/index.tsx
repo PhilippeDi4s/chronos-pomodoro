@@ -29,6 +29,7 @@ export function MainForm() {
     const taskName = taskNameInput.current.value.trim();
 
     if (!taskName) {
+      showMessage.dismiss();
       showMessage.warn('Digite o nome da Tarefa');
       return;
     }
@@ -42,13 +43,14 @@ export function MainForm() {
       duration: state.config[nextCicleType],
       type: nextCicleType,
     };
-
+    showMessage.dismiss();
     showMessage.success('Tarefa ' + newTask.name + ' iniciada');
 
     dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
   }
 
   function handleInterruptTask() {
+    showMessage.dismiss();
     showMessage.error('Tarefa cancelada');
     dispatch({ type: TaskActionTypes.INTERRUPT_TASK });
   }

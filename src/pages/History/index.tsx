@@ -12,9 +12,14 @@ import { useEffect, useState } from 'react';
 import { MainTemplate } from '../../components/templates/MainTemplate';
 import { showMessage } from '../../adapters/showMessage';
 import { ConfirmModal } from '../../components/ConfirmModal';
+import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
 
 export function History() {
-  const { state } = useTaskContext();
+  if(!!showMessage.error || !!showMessage.success){
+    showMessage.dismiss()
+  }
+
+  const { state, dispatch } = useTaskContext();
   const hasTasks = state.tasks.length > 0;
   const [sortTasksOptions, setSortTaskOptions] = useState<SortTasksOptions>(
     () => {
@@ -25,6 +30,7 @@ export function History() {
       };
     },
   );
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setSortTaskOptions(prevState => ({
@@ -53,7 +59,17 @@ export function History() {
 
   function handelResetHistory() {
     showMessage.dismiss();
-    <ConfirmModal question='Deseja excluir seu histórico?' textSuccess='Histórico excluído com sucesso!' />
+    setModalOpen(true);
+  }
+
+  function confirmModal() {
+    dispatch({ type: TaskActionTypes.RESET_STATE });
+    showMessage.success('Histórico deletado com sucesso!');
+    setModalOpen(false);
+  }
+
+  function cancelModal() {
+    setModalOpen(false);
   }
 
   return (
@@ -73,6 +89,12 @@ export function History() {
               />
             </span>
           )}
+          <ConfirmModal
+            isOpen={isModalOpen}
+            question='Tem certeza que deseja apagar seu histórico?'
+            onConfirm={confirmModal}
+            onCancel={cancelModal}
+          />
         </Heading>
       </Container>
 

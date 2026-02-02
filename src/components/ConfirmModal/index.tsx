@@ -1,51 +1,45 @@
-import { showMessage } from "../../adapters/showMessage";
-import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
-import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
-import styles from './styles.module.css';
+import { XIcon } from 'lucide-react';
+import style from './styles.module.css';
 
 type ConfirmModalProps = {
-    question: string;
-    textSuccess: string;
-}
+  isOpen: boolean;
+  question: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+};
 
-export function ConfirmModal({question, textSuccess}: ConfirmModalProps) {
-  const { dispatch } = useTaskContext();
+export function ConfirmModal({
+  isOpen,
+  question,
+  onConfirm,
+  onCancel,
+}: ConfirmModalProps) {
+  if (!isOpen) return null;
 
-  function handelResetHistoryTrue() {
-    showMessage.dismiss();
-    dispatch({ type: TaskActionTypes.RESET_STATE });
-    showMessage.success(textSuccess);
-  }
-
-  function handelResetHistoryFalse() {
-    showMessage.dismiss();
-  }
-
-    showMessage.warning(
-      <div className={styles.toastConfirmContainer}>
-        <span className={styles.toastConfirmText}>
-          {question}
-        </span>
-
-        <div className={styles.toastConfirmActions}>
+  return (
+    <div className={style.overlay} onClick={onCancel}>
+      <div className={style.modal} onClick={e => e.stopPropagation()}>
+        <div className={style.modal_header}>
+          <XIcon className={style.Xicon} onClick={onCancel} />
+        </div>
+        <div className={style.modal_question}>
+          <p>{question}</p>
+        </div>
+        <div className={style.modalConfirmActions}>
           <button
-            onClick={handelResetHistoryTrue}
-            className={`${styles.toastBtn} ${styles.toastBtnConfirm}`}
+            className={`${style.toastBtnConfirm} ${style.toastBtn}`}
+            onClick={onConfirm}
           >
             Ok
           </button>
           <button
-            onClick={handelResetHistoryFalse}
-            className={`${styles.toastBtn} ${styles.toastBtnCancel}`}
+            className={`${style.toastBtnCancel} ${style.toastBtn}`}
+            onClick={onCancel}
           >
             Cancelar
           </button>
         </div>
-      </div>,
-      {
-        autoClose: false,
-        closeOnClick: false,
-      },
-    );
-  return null; 
+      </div>
+    </div>
+  );
 }
