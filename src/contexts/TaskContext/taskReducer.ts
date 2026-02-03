@@ -35,7 +35,10 @@ export function taskReducer(state: TaskStateModel, action: TaskActionModel) {
       };
     }
     case TaskActionTypes.RESET_STATE: {
-      return {...initialTaskState};
+      return {
+        ...initialTaskState,
+        config: {...action.payload},
+      };
     }
     case TaskActionTypes.COUNT_DOWN: {
       return {
@@ -58,6 +61,12 @@ export function taskReducer(state: TaskStateModel, action: TaskActionModel) {
           }
           return task;
         }),
+      };
+    }
+    case TaskActionTypes.CHANGE_TASK: {
+      return {
+        ...state,
+        config: { ...action.payload },
       };
     }
   }

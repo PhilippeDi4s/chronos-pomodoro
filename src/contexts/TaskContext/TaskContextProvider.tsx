@@ -27,6 +27,7 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
       formatedSecondsRemaining: '00:00',
     };
   });
+
   const playBeepRef = useRef<ReturnType<typeof loadBeep> | null>(null);
 
   const worker = TimerWorkerManager.getInstance();
@@ -54,13 +55,13 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
 
   useEffect(() => {
     localStorage.setItem('state', JSON.stringify(state))
+    
+    document.title = `${state.formatedSecondsRemaining} - Chronos Pomodoro`
 
     if (!state.activeTask) {
       worker.terminate();
       return;
     }
-
-    document.title = `${state.formatedSecondsRemaining} - Chronos Pomodoro`
 
     worker.postMessage({
       startDate: state.activeTask.startDate,

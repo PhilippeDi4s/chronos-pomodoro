@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
+import { Routes, Route, useLocation } from 'react-router';
 import { Home } from '../../pages/Home';
 import { History } from '../../pages/History';
 import { AboutPomodoro } from '../../pages/AboutPomodoro';
@@ -18,7 +18,7 @@ function ScrollToTop() {
 
 export function MainRouter() {
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/history' element={<History />} />
@@ -27,6 +27,6 @@ export function MainRouter() {
         <Route path='*' element={<NotFound />} />
       </Routes>
       <ScrollToTop />
-    </BrowserRouter>
+    </>
   );
 }

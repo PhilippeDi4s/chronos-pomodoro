@@ -8,54 +8,46 @@ import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { formatDate } from '../../utils/formatDate';
 import { getTaskStatus } from '../../utils/getTaskStatus';
 import { sortTasks, type SortTasksOptions } from '../../utils/sortTasks';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MainTemplate } from '../../components/templates/MainTemplate';
 import { showMessage } from '../../adapters/showMessage';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
 
 export function History() {
-  if(!!showMessage.error || !!showMessage.success){
-    showMessage.dismiss()
-  }
+  useEffect(() => {
+    document.title = 'Histórico - Chronos Pomodoro';
+  }, []);
 
   const { state, dispatch } = useTaskContext();
   const hasTasks = state.tasks.length > 0;
-  const [sortTasksOptions, setSortTaskOptions] = useState<SortTasksOptions>(
-    () => {
-      return {
-        tasks: sortTasks({ tasks: state.tasks }),
-        field: 'startDate',
-        direction: 'desc',
-      };
-    },
-  );
+
+const [sortConfig, setSortConfig] = useState({
+  field: 'startDate' as SortTasksOptions['field'],
+  direction: 'desc' as SortTasksOptions['direction'],
+});
+
+
+const sortedTasks = useMemo(() => {
+  return sortTasks({
+    tasks: state.tasks,
+    field: sortConfig.field,
+    direction: sortConfig.direction,
+  });
+}, [state.tasks, sortConfig]);
+
+
+
   const [isModalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    setSortTaskOptions(prevState => ({
-      ...prevState,
-      tasks: sortTasks({
-        tasks: state.tasks,
-        direction: prevState.direction,
-        field: prevState.field,
-      }),
-    }));
-  }, [state.tasks]);
 
-  function handleSortTasks({ field }: Pick<SortTasksOptions, 'field'>) {
-    const newDirection = sortTasksOptions.direction === 'desc' ? 'asc' : 'desc';
+function handleSortTasks({ field }: Pick<SortTasksOptions, 'field'>) {
+  setSortConfig(prev => ({
+    field,
+    direction: prev.direction === 'desc' ? 'asc' : 'desc',
+  }));
+}
 
-    setSortTaskOptions({
-      tasks: sortTasks({
-        direction: newDirection,
-        tasks: sortTasksOptions.tasks,
-        field,
-      }),
-      direction: newDirection,
-      field,
-    });
-  }
 
   function handelResetHistory() {
     showMessage.dismiss();
@@ -63,7 +55,14 @@ export function History() {
   }
 
   function confirmModal() {
-    dispatch({ type: TaskActionTypes.RESET_STATE });
+    const configs = localStorage.getItem('state');
+
+    const configsParsed = configs ? JSON.parse(configs) : null;
+
+    dispatch({
+      type: TaskActionTypes.RESET_STATE,
+      payload: configsParsed.config,
+    });
     showMessage.success('Histórico deletado com sucesso!');
     setModalOpen(false);
   }
@@ -128,7 +127,7 @@ export function History() {
               </thead>
 
               <tbody>
-                {sortTasksOptions.tasks.map(task => {
+                {sortedTasks.map(task => {
                   const taskTypeDictionary = {
                     workTime: 'Foco',
                     shortBreakTime: 'Descanso curto',

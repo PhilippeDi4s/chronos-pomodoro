@@ -5,7 +5,7 @@ import type { TaskActionModel } from "./taskActions";
 
 export type TaskContextProps = {
   state: TaskStateModel;
-  dispatch: React.Dispatch<React.Dispatch<TaskActionModel>>;
+  dispatch: React.Dispatch<TaskActionModel>;
 };
 
 export const initialContextValue = {
